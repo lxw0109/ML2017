@@ -1,58 +1,60 @@
-from PIL import Image
-import numpy as np
+#!/usr/bin/env python3
+# coding: utf-8
+# File: Q2.py
+# Author: lxw
+# Date: 7/12/17 21:30 PM
 
-def compare_2_imgs():
-    # read an image.
-    im1 = Image.open("./lena.png")
-    width, height = im1.size
-    print("width:{0}\theight:{1}\n".format(width, height))	# 512, 512
-    data = im1.getdata()
-    np_data_1 = np.asarray(data)
-    print("np_data_1:", np_data_1)
-    """
-    """
+import numpy
+import random
 
-    # read an image.
-    im2 = Image.open("./lena_modified.png")
-    width, height = im2.size
-    print("width:{0}\theight:{1}\n".format(width, height))	# 512, 512
-    data = im2.getdata()
-    np_data_2 = np.asarray(data)
-    print("np_data_2:", np_data_2)
-    print("np_data_2.shape:", np_data_2.shape)
-    """
-    """
+class Q1:
+    heightA = 100
+    widthA = 200
+    heightB = 200
+    widthB = 300
+    def create_matrix(self):
+        with open("./matrixA.txt", "w") as f:
+            for row in range(self.heightA):
+                for col in range(self.widthA):
+                    f.write("{} ".format(random.randint(-100, 100)))
+                f.write("\n")
 
-    """
-    # Method 1(numpy)
-    np_data_delta = np_data_2 - np_data_1
-    print("np_data_delta: ", np_data_delta)
-    print("np_data_delta.shape: ", np_data_delta.shape)
-    np_data_delta = np_data_delta.reshape(height, width)
+        with open("./matrixB.txt", "w") as f:
+            for row in range(self.heightB):
+                for col in range(self.widthB):
+                    f.write("{} ".format(random.randint(-100, 100)))
+                f.write("\n")
 
-    im_result = Image.fromarray(np.uint8(np_data_delta))
-    width, height = im_result.size
-    print("width:{0}\theight:{1}\n".format(width, height))	# 512, 512
-    """
-
-    # Method 2(w/o numpy)
-    # im_w = Image.new("RGBA", (width, height), "white")
-    im_w = Image.new("RGBA", (width, height), "white")
-    print(im1.mode)
-
-    for h in range(height):
-        for w in range(width):
-            rgb1 = im1.getpixel((h, w))
-            rgb2 = im2.getpixel((h, w))
-            # print(rgb1, rgb2)
-            if rgb1 != rgb2:
-                print("not equal")
-                im_w.putpixel((h, w), rgb2)
-            else:
-                im_w.putpixel((h, w), (0, 0, 0, 0))
-
-    im_w.save("./ans2.png")
+    def run_Q1(self):
+        matrix_a = numpy.loadtxt("./matrixA.txt")
+        # print(matrix_a)
+        print(matrix_a.shape)
+        matrix_b = numpy.loadtxt("./matrixB.txt")
+        # print(matrix_b)
+        print(matrix_b.shape)
+        # matrix_c = matrix_a * matrix_b	# NO
+        matrix_c = numpy.dot(matrix_a, matrix_b)
+        print(matrix_c)
+        print(matrix_c.shape)
+        matrix_c = matrix_c.flatten()
+        print(matrix_c)
+        print(matrix_c.shape)
+        matrix_c_list = matrix_c.tolist()
+        print(matrix_c_list)
+        matrix_c_list.sort()
+        print(matrix_c_list)
+        with open("./ans_one.txt", "w") as f:
+            for num in matrix_c_list:
+                f.write("{}\n".format(int(num)))
 
 
 if __name__ == '__main__':
-    compare_2_imgs()
+	q1 = Q1()
+	q1.create_matrix()
+	q1.run_Q1()
+
+
+"""
+Reference:
+[numpy文件存取](http://hyry.dip.jp/tech/book/page/scipy/numpy_file.html)
+"""
